@@ -1,7 +1,6 @@
 
 # MLOps Pipeline for Opioid Abuse Disorder Prediction
 
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/2025-IE-MLOps-course/mlops_project-automation)
 
 This repository provides a modular, **production-quality** MLOps pipeline for binary classification of opioid abuse disorder, built as part of an academic project in the fundamentals of MLOps. The codebase is designed to bridge the gap between research prototypes (Jupyter notebooks) and scalable, maintainable machine learning systems in production.
 
