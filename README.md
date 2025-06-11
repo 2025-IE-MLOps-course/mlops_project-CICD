@@ -20,6 +20,10 @@ This repository provides a modular, **production-quality** MLOps pipeline for bi
 - Dynamic configuration managed with Hydra
 - Metrics and artifacts automatically logged to Weights & Biases
 
+**Phase 3: CI/CD and FastAPI Serving**
+- GitHub Actions workflow runs tests for Python 3.10 and 3.11
+- FastAPI application (`app/main.py`) exposes prediction and health endpoints
+
 ---
 
 ## 📁 Repository Structure
@@ -33,6 +37,8 @@ This repository provides a modular, **production-quality** MLOps pipeline for bi
 ├── models/                      # Serialized models, metrics, and preprocessing artifacts
 ├── logs/                        # Logging and validation artifacts
 ├── notebooks/                   # Source Jupyter notebook
+├── app/                         # FastAPI application for online serving
+├── .github/workflows/           # GitHub Actions CI pipeline
 ├── src/
 │   ├── data_load/               # Data ingestion utilities
 │   ├── data_validation/         # Config-driven schema and data validation
@@ -161,7 +167,7 @@ python -m src.main --stage infer --config config.yaml --input_csv data/inference
 
 **Serve the model via FastAPI:**
 ```bash
-uvicorn src.api.app:app --host 0.0.0.0 --port 8000
+uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
 **Call the running API:**
@@ -176,10 +182,8 @@ pytest
 
 ---
 
-## 📈 Next Steps (Planned Enhancements)
+## 📈 Next Steps
 
-- **CI/CD Automation:** Add GitHub Actions for linting, testing, and pipeline automation
-- **Online Serving:** Incorporate FastAPI for real-time, online serving of the trained model
 - **Containerization:** Dockerize the project to ensure portability, reproducibility, and ease of deployment across environments
 
 ---
