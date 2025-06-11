@@ -1,30 +1,30 @@
 {
   "validation": {
     "Accuracy": 0.6923076923076923,
-    "Precision (PPV)": 0.0,
-    "Specificity": 0.9,
-    "F1 Score": 0.0,
-    "Negative Predictive Value (NPV)": 0.75,
-    "ROC AUC": 0.5574074074074074,
+    "Precision (PPV)": 0.2857142857142857,
+    "Specificity": 0.8333333333333334,
+    "F1 Score": 0.25,
+    "Negative Predictive Value (NPV)": 0.78125,
+    "ROC AUC": 0.5962962962962963,
     "Confusion Matrix": {
-      "tn": 27,
-      "fp": 3,
-      "fn": 9,
-      "tp": 0
+      "tn": 25,
+      "fp": 5,
+      "fn": 7,
+      "tp": 2
     }
   },
   "test": {
-    "Accuracy": 0.75,
-    "Precision (PPV)": 0.0,
-    "Specificity": 0.967741935483871,
-    "F1 Score": 0.0,
-    "Negative Predictive Value (NPV)": 0.7692307692307693,
-    "ROC AUC": 0.5322580645161291,
+    "Accuracy": 0.725,
+    "Precision (PPV)": 0.3333333333333333,
+    "Specificity": 0.8709677419354839,
+    "F1 Score": 0.26666666666666666,
+    "Negative Predictive Value (NPV)": 0.7941176470588235,
+    "ROC AUC": 0.4605734767025089,
     "Confusion Matrix": {
-      "tn": 30,
-      "fp": 1,
-      "fn": 9,
-      "tp": 0
+      "tn": 27,
+      "fp": 4,
+      "fn": 7,
+      "tp": 2
     }
   }
 }
