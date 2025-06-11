@@ -3,3 +3,6 @@ pytest-dotenv==0.5.2
 pytest-cov==6.1.1
 black==25.1.0
 flake8==7.2.0
+fastapi==0.110.0
+uvicorn==0.29.0
+requests==2.32.3
