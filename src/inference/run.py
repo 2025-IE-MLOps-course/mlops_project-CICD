@@ -16,6 +16,11 @@ from datetime import datetime
 from pathlib import Path
 import copy
 
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+SRC_ROOT = PROJECT_ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
+
 import hydra
 import wandb
 import pandas as pd
@@ -23,12 +28,6 @@ from omegaconf import DictConfig, OmegaConf
 from dotenv import load_dotenv
 import yaml
 from data_validation.data_validator import validate_data
-
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-SRC_ROOT = PROJECT_ROOT / "src"
-if str(SRC_ROOT) not in sys.path:
-    sys.path.insert(0, str(SRC_ROOT))
-
 from inference.inferencer import run_inference
 
 load_dotenv()
