@@ -21,7 +21,11 @@ pip install \
     black==25.1.0 \
     flake8==7.2.0 \
     mlflow-skinny==2.22.0 \
-    wandb==0.19.11
+    wandb==0.19.11 \
+    fastapi==0.115.12 \
+    uvicorn==0.34.3 \
+    requests==2.32.4 \
+    httpx==0.28.1
 
 # Add src to PYTHONPATH for this session
 export PYTHONPATH="$(pwd)/src:$PYTHONPATH"
