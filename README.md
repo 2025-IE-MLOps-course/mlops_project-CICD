@@ -159,6 +159,16 @@ omit it (e.g., `main.steps=data_load,data_validation,model,evaluation`).
 python -m src.main --stage infer --config config.yaml --input_csv data/inference/new_data.csv --output_csv data/inference/output_predictions.csv
 ```
 
+**Serve the model via FastAPI:**
+```bash
+uvicorn src.api.app:app --host 0.0.0.0 --port 8000
+```
+
+**Call the running API:**
+```bash
+python scripts/call_api.py --url http://localhost:8000/predict --input data/inference/new_data.csv
+```
+
 **Run tests:**
 ```bash
 pytest
