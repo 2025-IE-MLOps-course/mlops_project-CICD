@@ -1,4 +1,4 @@
-# Byte-compiled / optimized / DLL files
+# Byte-compiled / optimised / DLL files
 __pycache__/
 *.py[cod]
 *.so
@@ -25,12 +25,16 @@ pip-wheel-metadata/
 logs/
 *.log
 
-# Test, split, and processed data (if/when added)
+# Ignore processed and split data
 data/processed/
 data/splits/
-data/raw/
-data/inference/
+
+# Ignore all CSVs by default
 *.csv
+
+# Track only these two CSVs
+!data/raw/opioid_raw_data.csv
+!data/inference/new_data.csv
 
 # OS files
 .DS_Store
@@ -41,15 +45,13 @@ Thumbs.db
 .cache/
 .coverage
 
-# VSCode and other IDE config
+# IDE config
 .vscode/
 .idea/
-/data
 
 # Mlflow and WandB tracking files
 mlruns/
 wandb/
 
-
-# Hydra config files
+# Hydra outputs
 outputs/
