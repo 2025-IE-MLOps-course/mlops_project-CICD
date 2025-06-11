@@ -1,7 +1,7 @@
 # config.yaml
 # All pipeline configuration lives here. Override any parameter via Hydra CLI or MLflow hydra_options.
 main:
-  WANDB_PROJECT: opioid_mlops_project
+  WANDB_PROJECT: opioid_mlops_project_CICD
   WANDB_ENTITY: idiazl  # Replace with your actual wandb entity/team
   steps: all            # e.g., "data_load,data_validation,model,evaluation,inference"
   hydra_options: ""     # Add this line for CLI/MLflow runtime overrides

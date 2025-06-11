@@ -1,0 +1,30 @@
+{
+  "validation": {
+    "Accuracy": 0.6923076923076923,
+    "Precision (PPV)": 0.0,
+    "Specificity": 0.9,
+    "F1 Score": 0.0,
+    "Negative Predictive Value (NPV)": 0.75,
+    "ROC AUC": 0.5574074074074074,
+    "Confusion Matrix": {
+      "tn": 27,
+      "fp": 3,
+      "fn": 9,
+      "tp": 0
+    }
+  },
+  "test": {
+    "Accuracy": 0.75,
+    "Precision (PPV)": 0.0,
+    "Specificity": 0.967741935483871,
+    "F1 Score": 0.0,
+    "Negative Predictive Value (NPV)": 0.7692307692307693,
+    "ROC AUC": 0.5322580645161291,
+    "Confusion Matrix": {
+      "tn": 30,
+      "fp": 1,
+      "fn": 9,
+      "tp": 0
+    }
+  }
+}
