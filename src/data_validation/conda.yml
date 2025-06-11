@@ -2,11 +2,11 @@ name: data_validation
 channels:
   - conda-forge
 dependencies:
-  - python=3.10
-  - pandas
-  - pyyaml
-  - hydra-core
-  - omegaconf
-  - python-dotenv
+  - python=3.10.17
+  - pandas=2.2.3
+  - pyyaml=6.0.2
+  - hydra-core=1.3.2
+  - omegaconf=2.3.0
+  - python-dotenv=1.1.0
   - pip:
-      - wandb
+      - wandb==0.19.11
