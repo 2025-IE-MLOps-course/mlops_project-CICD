@@ -14,7 +14,7 @@ import json
 import time
 from datetime import datetime
 from pathlib import Path
-import tempfile
+import copy
 
 import hydra
 import wandb
@@ -22,6 +22,7 @@ import pandas as pd
 from omegaconf import DictConfig, OmegaConf
 from dotenv import load_dotenv
 import yaml
+from data_validation.data_validator import validate_data
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SRC_ROOT = PROJECT_ROOT / "src"
@@ -71,21 +72,39 @@ def main(cfg: DictConfig) -> None:
         # Prefer W&B artifact for input data to preserve lineage
         try:
             in_art = run.use_artifact("predictions_input:latest")
-            with tempfile.TemporaryDirectory() as tmp_dir:
-                art_dir = Path(in_art.download(root=tmp_dir))
-                csv_files = list(art_dir.glob("*.csv"))
-                if csv_files:
-                    input_path = csv_files[0]
-                    logger.info("Using predictions_input artifact: %s", input_path)
+            art_dir = Path(in_art.download())
+            csv_files = list(art_dir.glob("*.csv"))
+            if csv_files:
+                input_path = csv_files[0]
+                logger.info("Using predictions_input artifact: %s", input_path)
         except Exception:
             logger.warning(
                 "predictions_input artifact not found; falling back to %s",
                 input_path,
             )
 
-        # Log input data hash and schema
+        # Log input data hash and schema, and validate before inference
         if input_path.is_file():
             in_df = pd.read_csv(input_path)
+            # ----- Data validation -----
+            val_cfg = copy.deepcopy(cfg_dict)
+            val_report = (
+                PROJECT_ROOT / "logs" / f"inference_validation_{run.id[:8]}.json"
+            )
+            val_cfg.setdefault("data_validation", {})["report_path"] = str(val_report)
+            validate_data(in_df, config=val_cfg)
+            if val_report.is_file():
+                art = wandb.Artifact("inference_validation_report", type="report")
+                art.add_file(str(val_report))
+                run.log_artifact(art, aliases=["latest"])
+                with open(val_report) as f:
+                    rep = json.load(f)
+                wandb.summary.update({
+                    "inference_validation_result": rep.get("result", "unknown"),
+                    "inference_validation_errors": len(rep.get("errors", [])),
+                    "inference_validation_warnings": len(rep.get("warnings", [])),
+                })
+
             wandb.summary["input_data_hash"] = df_hash(in_df)
             input_schema = {col: str(dtype) for col, dtype in in_df.dtypes.items()}
             wandb.summary["input_data_schema"] = input_schema
