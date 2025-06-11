@@ -12,11 +12,11 @@ pip install \
     pytest-dotenv==0.5.2 \
     scikit-learn==1.6.1 \
     scipy==1.15.2 \
-    hydra-core \
-    omegaconf \
-    dvc \
-    dvc-s3 \
-    awscli \
+    hydra-core==1.3.2 \
+    omegaconf==2.3.0 \
+    dvc==3.59.2 \
+    dvc-s3==3.2.0 \
+    awscli==2.27.27 \
     pytest-cov==6.1.1 \
     black==25.1.0 \
     flake8==7.2.0 \
