@@ -159,6 +159,73 @@ def main() -> None:
     run_inference(args.input_csv, args.config_yaml, args.output_csv)
 
 
+def run_inference_df(df: pd.DataFrame, config: Dict) -> pd.DataFrame:
+    """Run inference on an in-memory DataFrame.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Raw input data containing the columns listed under ``raw_features`` in
+        ``config``.
+    config : Dict
+        Parsed YAML configuration providing artifact paths and feature lists.
+
+    Returns
+    -------
+    pandas.DataFrame
+        Copy of the input with ``prediction`` and ``prediction_proba`` columns
+        appended.
+
+    Notes
+    -----
+    This helper mirrors :func:`run_inference` but avoids any file I/O. It is
+    intended for use from API endpoints where data are already loaded in memory
+    and predictions should be returned directly.
+    """
+
+    pp_path = _resolve(
+        config.get("artifacts", {}).get(
+            "preprocessing_pipeline", "models/preprocessing_pipeline.pkl"
+        )
+    )
+    model_path = _resolve(
+        config.get("artifacts", {}).get("model_path", "models/model.pkl")
+    )
+
+    pipeline = _load_pickle(str(pp_path), "preprocessing pipeline")
+    model = _load_pickle(str(model_path), "model")
+
+    raw_features: list[str] = config.get("raw_features", [])
+    missing = [c for c in raw_features if c not in df.columns]
+    if missing:
+        raise ValueError(f"Missing required columns: {missing}")
+
+    X_raw = df[raw_features]
+    X_proc = pipeline.transform(X_raw)
+
+    engineered = config.get("features", {}).get("engineered", [])
+    if engineered:
+        feature_names = get_output_feature_names(
+            preprocessor=pipeline,
+            input_features=raw_features,
+            config=config,
+        )
+        selected = [f for f in engineered if f in feature_names]
+        if not selected:
+            raise ValueError(
+                "None of the engineered features are present after transform"
+            )
+        indices = [feature_names.index(f) for f in selected]
+        X_proc = X_proc[:, indices]
+
+    result_df = df.copy()
+    result_df["prediction"] = model.predict(X_proc)
+    if hasattr(model, "predict_proba"):
+        result_df["prediction_proba"] = model.predict_proba(X_proc)[:, 1]
+
+    return result_df
+
+
 if __name__ == "__main__":
     main()
 
