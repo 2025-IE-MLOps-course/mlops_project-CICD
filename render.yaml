@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: mlops-api
+    env: docker
+    plan: free
+    dockerfilePath: Dockerfile
+    buildCommand: ""
+    startCommand: ""
