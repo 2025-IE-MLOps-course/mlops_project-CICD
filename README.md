@@ -185,11 +185,22 @@ The `/predict` endpoint remains available for single-record requests.
 pytest
 ```
 
+## 🐳 Docker Deployment
+
+Build the Docker image and run the API locally:
+```bash
+docker build -t opioid-api .
+docker run -p 8000:8000 opioid-api
+```
+The server respects the `PORT` environment variable (default `8000`),
+making it compatible with platforms such as Render. See `render.yaml`
+for a minimal deployment configuration.
+
 ---
 
 ## 📈 Next Steps
 
-- **Containerization:** Dockerize the project to ensure portability, reproducibility, and ease of deployment across environments
+- **CI/CD Enhancements:** Automate Docker image builds and publishing
 
 ---
 

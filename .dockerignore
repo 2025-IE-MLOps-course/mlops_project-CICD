@@ -1,0 +1,23 @@
+# Ignore git and dvc history
+.git
+.dvc
+.dvcignore
+data.dvc
+
+# Ignore datasets and artifacts
+artifacts/
+data/
+models/
+logs/
+wandb/
+mlruns/
+outputs/
+notebooks/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Environment files
+.env
+*.env
