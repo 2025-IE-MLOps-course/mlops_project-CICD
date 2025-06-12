@@ -23,6 +23,8 @@ This repository provides a modular, **production-quality** MLOps pipeline for bi
 **Phase 3: CI/CD and FastAPI Serving**
 - GitHub Actions workflow runs tests for Python 3.10 and 3.11
 - FastAPI application (`app/main.py`) exposes prediction and health endpoints
+  and now includes a `/predict_batch` route for validating and scoring multiple
+  records in one request
 
 ---
 
@@ -111,6 +113,8 @@ The pipeline predicts **opioid abuse disorder** based on anonymized claims data,
 ### 5. Batch Inference (`src/inference/inferencer.py`)
 - Loads preprocessing and model artifacts
 - Transforms new data, predicts outcomes, exports CSV
+- Provides `run_inference_df` helper used by the `/predict_batch` API endpoint
+  to apply the same preprocessing and validation in memory
 
 ### 6. Unit Testing (`tests/`)
 - Full pytest suite for each module
@@ -170,10 +174,11 @@ python -m src.main --stage infer --config config.yaml --input_csv data/inference
 uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
-**Call the running API:**
+**Call the running API (batch example):**
 ```bash
-python scripts/call_api.py --url http://localhost:8000/predict --input data/inference/new_data.csv
+python scripts/call_api.py --url http://localhost:8000/predict_batch --input data/inference/new_data.csv
 ```
+The `/predict` endpoint remains available for single-record requests.
 
 **Run tests:**
 ```bash
