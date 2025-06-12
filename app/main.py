@@ -1,12 +1,13 @@
 from __future__ import annotations
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 import pickle
 import yaml
 from pathlib import Path
 import pandas as pd
 from preprocess.preprocessing import get_output_feature_names
+from inference.inferencer import run_inference_df
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = PROJECT_ROOT / "config.yaml"
@@ -106,3 +107,16 @@ def predict(payload: PredictionInput):
     pred = MODEL.predict(X_proc)[0]
     proba = MODEL.predict_proba(X_proc)[0, 1] if hasattr(MODEL, "predict_proba") else None
     return {"prediction": int(pred), "probability": float(proba) if proba is not None else None}
+
+
+@app.post("/predict_batch")
+def predict_batch(payloads: list[PredictionInput]):
+    df = pd.DataFrame([p.dict(by_alias=True) for p in payloads])
+    try:
+        result_df = run_inference_df(df, config=CONFIG)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    result = result_df[["prediction", "prediction_proba"]].rename(
+        columns={"prediction_proba": "probability"}
+    )
+    return result.to_dict(orient="records")

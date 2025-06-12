@@ -261,3 +261,76 @@ def test_inference_fails_on_unfitted_pipeline(tmp_path, toy_config, toy_df, toy_
     with pytest.raises(NotFittedError):
         inferencer.run_inference(
             str(input_path), str(config_path), str(output_path))
+
+
+def test_run_inference_df_happy_path(tmp_path, toy_config, toy_df, toy_model, toy_pipeline):
+    """run_inference_df returns predictions without touching disk."""
+    pp_path = tmp_path / "preproc.pkl"
+    model_path = tmp_path / "model.pkl"
+    write_pickle(toy_pipeline, pp_path)
+    write_pickle(toy_model, model_path)
+    config = dict(toy_config)
+    config["artifacts"]["preprocessing_pipeline"] = str(pp_path)
+    config["artifacts"]["model_path"] = str(model_path)
+    out_df = inferencer.run_inference_df(toy_df, config)
+    assert "prediction" in out_df.columns
+    assert len(out_df) == len(toy_df)
+
+
+def test_run_inference_df_missing_columns(tmp_path, toy_config, toy_df, toy_pipeline, toy_model):
+    """ValueError if required raw features are missing."""
+    pp_path = tmp_path / "pp.pkl"
+    model_path = tmp_path / "m.pkl"
+    write_pickle(toy_pipeline, pp_path)
+    write_pickle(toy_model, model_path)
+    config = dict(toy_config)
+    config["artifacts"]["preprocessing_pipeline"] = str(pp_path)
+    config["artifacts"]["model_path"] = str(model_path)
+    bad_df = toy_df.drop(columns=["f2"])
+    with pytest.raises(ValueError):
+        inferencer.run_inference_df(bad_df, config)
+
+
+def test_run_inference_df_engineered_subset(tmp_path, toy_df):
+    """Subset of engineered features is respected."""
+    X = toy_df[["f1"]].values
+    y = [0, 1, 0, 1]
+    model = LogisticRegression()
+    model.fit(X, y)
+    col_transform = ColumnTransformer(
+        [('pass', FunctionTransformer(), ['f1'])])
+    pipe = Pipeline([('col_transform', col_transform)])
+    pipe.fit(toy_df)
+    pp_path = tmp_path / "preproc.pkl"
+    model_path = tmp_path / "model.pkl"
+    write_pickle(pipe, pp_path)
+    write_pickle(model, model_path)
+    config = {
+        "raw_features": ["f1", "f2"],
+        "features": {"engineered": ["f1"]},
+        "artifacts": {
+            "preprocessing_pipeline": str(pp_path),
+            "model_path": str(model_path),
+        }
+    }
+    out_df = inferencer.run_inference_df(toy_df, config)
+    assert len(out_df) == len(toy_df)
+    assert "prediction" in out_df.columns
+
+
+def test_run_inference_df_engineered_features_missing(tmp_path, toy_df, toy_model, toy_pipeline):
+    """Raise if configured engineered features are absent after preprocessing."""
+    pp_path = tmp_path / "preproc.pkl"
+    model_path = tmp_path / "model.pkl"
+    write_pickle(toy_pipeline, pp_path)
+    write_pickle(toy_model, model_path)
+    config = {
+        "raw_features": ["f1", "f2"],
+        "features": {"engineered": ["not_present"]},
+        "artifacts": {
+            "preprocessing_pipeline": str(pp_path),
+            "model_path": str(model_path),
+        }
+    }
+    with pytest.raises(ValueError):
+        inferencer.run_inference_df(toy_df, config)
