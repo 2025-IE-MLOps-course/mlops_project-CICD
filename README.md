@@ -192,6 +192,15 @@ Build the Docker image and run the API locally:
 docker build -t opioid-api .
 docker run -p 8000:8000 opioid-api
 ```
+Before building or running, set the following environment variables so the
+container can download the latest model from Weights & Biases:
+
+```bash
+export WANDB_PROJECT=<your-project>
+export WANDB_ENTITY=<your-entity>
+export WANDB_API_KEY=<your-api-key>
+```
+
 The server respects the `PORT` environment variable (default `8000`),
 making it compatible with platforms such as Render. See `render.yaml`
 for a minimal deployment configuration.
