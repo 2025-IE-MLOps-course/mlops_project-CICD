@@ -187,18 +187,18 @@ pytest
 
 ## 🐳 Docker Deployment
 
-Build the Docker image and run the API locally:
-```bash
-docker build -t opioid-api .
-docker run -p 8000:8000 opioid-api
-```
-Before building or running, set the following environment variables so the
+Before building or running, set the following environment variables on your .env so the
 container can download the latest model from Weights & Biases:
 
 ```bash
-export WANDB_PROJECT=<your-project>
-export WANDB_ENTITY=<your-entity>
-export WANDB_API_KEY=<your-api-key>
+WANDB_PROJECT=<your-project>
+WANDB_ENTITY=<your-entity>
+WANDB_API_KEY=<your-api-key>
+```
+Build the Docker image and run the API locally:
+```bash
+docker build -t opioid-api .
+docker run --env-file .env -p 8000:8000 opioid-api
 ```
 
 The server respects the `PORT` environment variable (default `8000`),
