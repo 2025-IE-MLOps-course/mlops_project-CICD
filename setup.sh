@@ -10,7 +10,7 @@ pip install \
     python-dotenv==1.1.0 \
     pytest==8.3.5 \
     pytest-dotenv==0.5.2 \
-    scikit-learn==1.6.1 \
+    scikit-learn==1.7.0 \
     scipy==1.15.2 \
     hydra-core==1.3.2 \
     omegaconf==2.3.0 \
